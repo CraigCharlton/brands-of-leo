@@ -22,7 +22,7 @@ it('search for movies', async () => {
   })
 })
 
-it('renders watch later component', async() => {
+it('renders watch later component', async () => {
   renderWithProviders(<App />)
   const user = userEvent.setup()
   await user.click(screen.getByText(/watch later/i))
@@ -30,12 +30,12 @@ it('renders watch later component', async() => {
 })
 
 
-it('renders starred component', async() => {
+it('renders starred component', async () => {
   renderWithProviders(<App />)
   const user = userEvent.setup()
   await user.click(screen.getByTestId('nav-starred'))
   expect(screen.getByText(/There are no starred movies/i)).toBeInTheDocument()
   await waitFor(() => {
     expect(screen.getByTestId('starred')).toBeInTheDocument()
-  })  
+  })
 })

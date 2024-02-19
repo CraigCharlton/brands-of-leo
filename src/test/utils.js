@@ -13,8 +13,8 @@ export function renderWithProviders(
   {
     preloadedState = {},
     store = configureStore({
-      reducer: { 
-        movies: moviesSlice.reducer, 
+      reducer: {
+        movies: moviesSlice.reducer,
         starred: starredSlice.reducer,
         watchLater: watchLaterSlice.reducer
       },

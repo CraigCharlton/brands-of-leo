@@ -1,4 +1,4 @@
-# Movieland 
+# Movieland
 
 React + Redux + RTK + Bootstrap application that fetches movies from [https://www.themoviedb.org/](https://www.themoviedb.org/)
 

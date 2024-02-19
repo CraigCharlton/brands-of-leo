@@ -14,23 +14,23 @@ import './app.scss'
 const App = () => {
 
   const state = useSelector((state) => state)
-  const { movies } = state  
+  const { movies } = state
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = searchParams.get('search')
   const [videoKey, setVideoKey] = useState()
   const [isOpen, setOpen] = useState(false)
   const navigate = useNavigate()
-  
+
   const closeModal = () => setOpen(false)
-  
+
   const closeCard = () => {
 
   }
 
   const getSearchResults = (query) => {
     if (query !== '') {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+query))
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + query))
       setSearchParams(createSearchParams({ search: query }))
     } else {
       dispatch(fetchMovies(ENDPOINT_DISCOVER))
@@ -45,9 +45,9 @@ const App = () => {
 
   const getMovies = () => {
     if (searchQuery) {
-        dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=`+searchQuery))
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + searchQuery))
     } else {
-        dispatch(fetchMovies(ENDPOINT_DISCOVER))
+      dispatch(fetchMovies(ENDPOINT_DISCOVER))
     }
   }
 
@@ -84,7 +84,7 @@ const App = () => {
             videoKey={videoKey}
           />
         ) : (
-          <div style={{padding: "30px"}}><h6>no trailer available. Try another movie</h6></div>
+          <div style={{ padding: "30px" }}><h6>no trailer available. Try another movie</h6></div>
         )}
 
         <Routes>
