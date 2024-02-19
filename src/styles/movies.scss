@@ -11,9 +11,24 @@
     text-decoration: none;
   }
 
+  .movies {
+    display: block;  // Mobile first
+
+    @media (min-width: 576px) { // To match col sm 4 size
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+
   .wrapper {
     padding: 0 6px;
     margin-bottom: 2rem;
+  }
+
+  @media (max-width: 575px) { // To overwrite col sm 4 width
+    .col-sm-4 {
+      width: 100%;
+    }
   }
 
   .card,
