@@ -320,3 +320,30 @@
     background-color: transparent;
   }
 }
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width:100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
+
+.modal-player {
+  left: 50%;
+  margin-left: -320px; // Half default modal
+  margin-top: -180px;
+  position: fixed;
+  top: 50%;
+}
+.modal-close {
+  background: #fff;
+  border-radius: 20px;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 610px;
+  padding: 1px 6px;
+}

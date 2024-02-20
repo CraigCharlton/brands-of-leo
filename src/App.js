@@ -79,10 +79,15 @@ const App = () => {
       <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
 
       <div className="container">
-        {videoKey ? (
-          <YouTubePlayer
-            videoKey={videoKey}
-          />
+        {videoKey && isOpen ? (
+          <div className="modal-container">
+            <div className='modal-player'>
+              <span className='modal-close' onClick={() =>  closeModal()}>X</span>
+              <YouTubePlayer
+                videoKey={videoKey}
+              />
+            </div>
+          </div>
         ) : (
           <div style={{ padding: "30px" }}><h6>no trailer available. Try another movie</h6></div>
         )}
