@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Routes, Route, createSearchParams, useSearchParams, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
 import 'reactjs-popup/dist/index.css'
@@ -20,6 +20,8 @@ const App = () => {
   const searchQuery = searchParams.get('search')
   const [videoKey, setVideoKey] = useState()
   const [isOpen, setOpen] = useState(false)
+  const [pageNumber, setPageNumber] = useState(1)
+  const loadingRef = useRef(null);
   const navigate = useNavigate()
 
   const closeModal = () => setOpen(false)
@@ -30,10 +32,10 @@ const App = () => {
 
   const getSearchResults = (query) => {
     if (query !== '') {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + query))
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + query + `&page=${pageNumber}`))
       setSearchParams(createSearchParams({ search: query }))
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER))
+      dispatch(fetchMovies(ENDPOINT_DISCOVER + `&page=${pageNumber}`))
       setSearchParams()
     }
   }
@@ -45,9 +47,9 @@ const App = () => {
 
   const getMovies = () => {
     if (searchQuery) {
-      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + searchQuery))
+      dispatch(fetchMovies(`${ENDPOINT_SEARCH}&query=` + searchQuery + `&page=${pageNumber}`))
     } else {
-      dispatch(fetchMovies(ENDPOINT_DISCOVER))
+      dispatch(fetchMovies(ENDPOINT_DISCOVER + `&page=${pageNumber}`))
     }
   }
 
@@ -71,26 +73,46 @@ const App = () => {
   }
 
   useEffect(() => {
-    getMovies()
-  }, [])
+    getMovies(pageNumber)
+  }, [pageNumber])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPageNumber((page) => page + 1);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (loadingRef.current) observer.observe(loadingRef.current);
+
+    return () => {
+      if (observer.current) {
+        observer.unobserve(observer.current);
+      }
+    };
+  }, [loadingRef]);
 
   return (
     <div className="App">
       <Header searchMovies={searchMovies} searchParams={searchParams} setSearchParams={setSearchParams} />
 
       <div className="container">
-        {videoKey && isOpen ? (
+        {isOpen ? (
           <div className="modal-container">
             <div className='modal-player'>
-              <span className='modal-close' onClick={() =>  closeModal()}>X</span>
-              <YouTubePlayer
-                videoKey={videoKey}
-              />
+              <span className='modal-close' onClick={() => closeModal()}>X</span>
+              {videoKey ? (
+                <YouTubePlayer
+                  videoKey={videoKey}
+                />
+              ) : (
+                <div style={{ padding: "30px" }}><h6>no trailer available. Try another movie</h6></div>
+              )}
             </div>
           </div>
-        ) : (
-          <div style={{ padding: "30px" }}><h6>no trailer available. Try another movie</h6></div>
-        )}
+        ) : (<div></div>)}
 
         <Routes>
           <Route path="/" element={<Movies movies={movies} viewTrailer={viewTrailer} closeCard={closeCard} />} />
@@ -98,6 +120,9 @@ const App = () => {
           <Route path="/watch-later" element={<WatchLater viewTrailer={viewTrailer} />} />
           <Route path="*" element={<h1 className="not-found">Page Not Found</h1>} />
         </Routes>
+        <div className="loader" ref={loadingRef}>
+          <h3>Loading....</h3>
+        </div>
       </div>
     </div>
   )
